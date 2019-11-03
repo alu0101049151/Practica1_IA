@@ -8,7 +8,8 @@
  * Practice 1 - Artificial Intelligence
  * Email: alu0101049151@ull.edu.es
  * Node.h file: Node class. It represents a node of the graph that is subsequently
- *                          used to carry out the search algorithm A*
+ *                          used to carry out the search algorithm A*.
+ *                          This file contains the class definition.
  * References:
  *                Practice statement:
  *                https://campusvirtual.ull.es/1920/mod/resource/view.php?id=90332
@@ -20,25 +21,38 @@
 #define PRACTICE6_DFA2dot_H
 
 class Node {
+
 public:
-  Node::Node();
-  Node::Node(int id, int totalDistance, int heuristic);
-  Node::Node(const Node& node);
+  Node();
+
+  /**
+  * @brief param constructor of the node class.
+  * @param id is the node numeric identifier.
+  * @param totalDistance is cost of the route from the starting node to the
+  * current node.
+  * @param heuristic is the heuristic value of this node.
+  */
+  Node(int id, int totalDistance, int heuristic);
+  Node(const Node& node);
+  ~Node();
 
   int getId() const;
   int getHeuristic() const;
   int getTotalCost() const;
+  Node* getFather() const;
+
+  int operator< (const Node& node) const;
 
 //TODO:
-// -Sobre carga del <
 // - Setters
 protected:
 
 private:
+  Node* father_;     //!< Father of the current node.
   int id_;           //!< Node numeric identifier.
-  int heuristic_;    //!< Node heuristic.
+  int heuristic_;    //!< Node heuristic. h(n).
   int totalCost_;    //!< Estimated total cost of the cheapest solution that goes
-                     //!< through this node.
+                     //!< through this node. f(n) = g(n) + h(n).
 };
 
 #endif //PRACTICE6_DFA2dot_H
