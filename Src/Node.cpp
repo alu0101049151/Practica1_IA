@@ -70,7 +70,6 @@ Node* Node::getFather() const {
   return father_;
 }
 
-
 /**
 * < operator overload to order the nodes from least to greatest according to the
 * value of "totalCost_";

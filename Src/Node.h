@@ -17,8 +17,8 @@
  *                30/10/2019 - Creation (first version) of the code
  */
 
-#ifndef PRACTICE6_DFA2dot_H
-#define PRACTICE6_DFA2dot_H
+#ifndef PRACTICE6_NODE_H
+#define PRACTICE6_NODE_H
 
 class Node {
 
@@ -55,4 +55,4 @@ private:
                      //!< through this node. f(n) = g(n) + h(n).
 };
 
-#endif //PRACTICE6_DFA2dot_H
+#endif //PRACTICE6_NODE_H
