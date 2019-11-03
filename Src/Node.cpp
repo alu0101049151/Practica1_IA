@@ -25,7 +25,7 @@ Node::Node():
 /**
 * totalDistance is cost of the route from the starting node to the current node.
 */
-Node::Node(int id, int totalDistance, int heuristic):
+Node::Node(std::string& id, int totalDistance, int heuristic):
   father_(nullptr),
   id_(id),
   heuristic_(heuristic),
@@ -44,7 +44,7 @@ Node::~Node() {}
 /**
 * Returns the node numeric identifier.
 */
-int Node::getId() const {
+std::string Node::getId() const {
   return id_;
 }
 

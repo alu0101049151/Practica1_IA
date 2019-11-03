@@ -19,7 +19,7 @@
 
  #include "Graph.h"
 
-Graph::Graph(std::string& distancesFile, std::string& heuristicsFile, int origin, int destination):
+Graph::Graph(std::string& distancesFile, std::string& heuristicsFile, std::string& origin, std::string& destination):
   origin_(origin),
   destination_(destination) {
     fillMatrix (distancesFile);
@@ -48,11 +48,11 @@ void Graph::fillMatrix(std::string& inputFile) {
     for (int i = 0; i < n; ++i) {
       for (int j = i+1; j < n; ++j) {
         std::getline(distancesFile, readed);
-        if (readed != "-1") {
+        //if (readed != "-1") {
           auxInt = stoi(readed);
           adjacencyMatrix_[i][j] = auxInt;
           adjacencyMatrix_[j][i] = auxInt;
-        }
+        //}
       }
     }
   }

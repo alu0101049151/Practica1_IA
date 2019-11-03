@@ -23,7 +23,6 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <string>
 //include <algorithm>?????
 
 #include "Node.h"
@@ -32,12 +31,32 @@ const char NEWLINE = '\n';
 
 class Graph {
 public:
-  Graph(std::string& distancesFile, std::string& heuristicsFile, int origin, int destination);
-  ~Graph();
 
+  /**
+  * @brief parameter constructor.
+  * @param distancesFile name of the input file that contains the distances between nodes.
+  * @param heuristicsFile name of the input file that contains the heuristic of each node.
+  * @param origin id of the star node.
+  * @param destination id of the destination node.
+  */
+  Graph(std::string& distancesFile, std::string& heuristicsFile, std::string& origin, std::string& destination);
+  ~Graph();
+  /**
+  * @brief Read the input file with the distances btween nodes and fill the
+  * adjacency matrix.
+  * @param inputFile File containing the distances between nodes.
+  */
   void fillMatrix(std::string& inputFile);
+  /**
+  * @brief Read the input file with the heuristics of each node and fill the
+  * heuristics vector.
+  * @param inputFile File containing the heuristic of each node.
+  */
   void fillHeuristics(std::string& inputFile);
-  //Búsqueda A*
+  /**
+  * @brief Method that carries out the A* search.
+  */
+  void AstarSearch();
   //Imprimir tabla de resultados al fichero.
 
 protected:
@@ -47,8 +66,9 @@ private:
   std::vector<Node>  generatedNodes_;  //!< Contains the generated nodes in the graph.
   std::vector<Node>  inspectedNodes_;  //!< Contains the inspected nodes of all those that have been
                                        //!< generated.
-  int origin_;       //!< Is the id of the start node.
-  int destination_;  //!< Is the node we want to reach from the origin node.
+  // ES NECESARIO UN VECTOR PARA ALMACENAR LA TRAZA?
+  std::string origin_;       //!< Is the id of the start node.
+  std::string destination_;  //!< Is the id of the node we want to reach from the origin node.
 };
 
 #endif //PRACTICE6_GRAPH_H

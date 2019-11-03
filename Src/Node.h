@@ -20,11 +20,12 @@
 #ifndef PRACTICE6_NODE_H
 #define PRACTICE6_NODE_H
 
+#include <string>
+
 class Node {
 
 public:
   Node();
-
   /**
   * @brief param constructor of the node class.
   * @param id is the node numeric identifier.
@@ -32,11 +33,12 @@ public:
   * current node.
   * @param heuristic is the heuristic value of this node.
   */
-  Node(int id, int totalDistance, int heuristic);
+  Node(std::string& id, int totalDistance, int heuristic);
+  // CONSTRUCTOR CON EL PADRE.
   Node(const Node& node);
   ~Node();
 
-  int getId() const;
+  std::string getId() const;
   int getHeuristic() const;
   int getTotalCost() const;
   Node* getFather() const;
@@ -49,7 +51,7 @@ protected:
 
 private:
   Node* father_;     //!< Father of the current node.
-  int id_;           //!< Node numeric identifier.
+  std::string id_;   //!< Node numeric identifier.
   int heuristic_;    //!< Node heuristic. h(n).
   int totalCost_;    //!< Estimated total cost of the cheapest solution that goes
                      //!< through this node. f(n) = g(n) + h(n).
