@@ -7,7 +7,7 @@
  * Grade: 3rd
  * Practice 1 - Artificial Intelligence
  * Email: alu0101049151@ull.edu.es
- * Graph.h file: Graph class. Represents represents the graph with which the A *
+ * Graph.h file: Graph class. Represents the graph with which the A *
  *                            search will be carried out.
  *                            This file contains the class definition.
  * References:
@@ -23,7 +23,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-//include <algorithm>?????
+#include <algorithm>
 
 #include "Node.h"
 
@@ -39,36 +39,58 @@ public:
   * @param origin id of the star node.
   * @param destination id of the destination node.
   */
-  Graph(std::string& distancesFile, std::string& heuristicsFile, std::string& origin, std::string& destination);
+  Graph(std::string& distancesFile, std::string& heuristicsFile, int origin, int destination);
   ~Graph();
+  std::vector<std::vector<float> > getAdjacencyMatrix() const;
+  std::vector<float> getHeuristics() const;
+
+
+
   /**
-  * @brief Read the input file with the distances btween nodes and fill the
-  * adjacency matrix.
-  * @param inputFile File containing the distances between nodes.
-  */
-  void fillMatrix(std::string& inputFile);
-  /**
-  * @brief Read the input file with the heuristics of each node and fill the
-  * heuristics vector.
-  * @param inputFile File containing the heuristic of each node.
-  */
-  void fillHeuristics(std::string& inputFile);
-  /**
-  * @brief Method that carries out the A* search.
+  * @brief Method to carry out the A* search.
   */
   void AstarSearch();
   //Imprimir tabla de resultados al fichero.
 
 protected:
+  /**
+  * @brief Reads the input file with the distances btween nodes and fill the
+  * adjacency matrix.
+  * @param inputFile File containing the distances between nodes.
+  */
+  void fillMatrix(std::string& inputFile);
+  /**
+  * @brief Reads the input file with the heuristics of each node and fill the
+  * heuristics vector.
+  * @param inputFile File containing the heuristic of each node.
+  */
+  void fillHeuristics(std::string& inputFile);
+
+  /**
+  * @brief Checks if the node to generate is in the branch.
+  * @param newNode is the node to generate.
+  * @param father it the node to compare.
+  * @return true if the node is in the branch.
+  */
+  bool checkBranch(Node newNode, Node* father);
+
+  /**
+  * @brief Enter in the path_ vector the backtrace of the path followed from the origin
+  * node to the destination node.
+  */
+  void pathBackTrace(Node* currentNode);
+
 private:
   std::vector<std::vector<float> > adjacencyMatrix_;  //!< Is the matrix of distances between nodes.
   std::vector<float> heuristics_;      //!< Contains the heuristics of this Graph nodes.
+  std::vector<int> path_;      //!< Contains the ids of the nodes of the final path.
   std::vector<Node>  generatedNodes_;  //!< Contains the generated nodes in the graph.
   std::vector<Node>  inspectedNodes_;  //!< Contains the inspected nodes of all those that have been
                                        //!< generated.
-  // ES NECESARIO UN VECTOR PARA ALMACENAR LA TRAZA?
-  std::string origin_;       //!< Is the id of the start node.
-  std::string destination_;  //!< Is the id of the node we want to reach from the origin node.
+
+  int origin_;             //!< Is the id of the start node.
+  int destination_;        //!< Is the id of the node we want to reach from the origin node.
+  int totalGeneratedNodes_; //!< Is the total amount of generated nodes.
 };
 
 #endif //PRACTICE6_GRAPH_H

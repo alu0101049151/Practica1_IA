@@ -25,16 +25,25 @@ Node::Node():
 /**
 * totalDistance is cost of the route from the starting node to the current node.
 */
-Node::Node(std::string& id, int totalDistance, int heuristic):
+Node::Node(int id, float cost, float heuristic):
   father_(nullptr),
   id_(id),
+  cost_(cost),
   heuristic_(heuristic),
-  totalCost_(totalDistance) {}
+  totalCost_(cost_ + heuristic_) {}
 
+Node::Node(int id, float cost, float heuristic, Node* father):
+  id_(id),
+  cost_(cost),
+  heuristic_(heuristic),
+  totalCost_(cost_ + heuristic_) {
+    father_ = father;
+  }
 
 Node::Node(const Node& node):
   father_(node.father_),
   id_(node.id_),
+  cost_(node.cost_),
   heuristic_(node.heuristic_),
   totalCost_(node.totalCost_) {}
 
@@ -44,23 +53,30 @@ Node::~Node() {}
 /**
 * Returns the node numeric identifier.
 */
-std::string Node::getId() const {
+int Node::getId() const {
   return id_;
 }
 
 /**
-* Returns the heuristic value of the node.
+* Returns the heuristic value of the node (h(n)).
 */
-int Node::getHeuristic() const {
+float Node::getHeuristic() const {
   return heuristic_;
 }
 
 /**
 * Returns the sum of the heuristic of the node plus cost of the route
-* from the starting node to the current node
+* from the starting node to the current node (f(n)).
 */
-int Node::getTotalCost() const {
+float Node::getTotalCost() const {
   return totalCost_;
+}
+
+/**
+* Returns the accumulated cost (g(n)).
+*/
+float Node::getCost() const {
+  return cost_;
 }
 
 /**

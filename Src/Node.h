@@ -33,14 +33,15 @@ public:
   * current node.
   * @param heuristic is the heuristic value of this node.
   */
-  Node(std::string& id, int totalDistance, int heuristic);
-  // CONSTRUCTOR CON EL PADRE.
+  Node(int id, float cost, float heuristic);
+  Node(int id, float cost, float heuristic, Node* father);
   Node(const Node& node);
   ~Node();
 
-  std::string getId() const;
-  int getHeuristic() const;
-  int getTotalCost() const;
+  int getId() const;
+  float getHeuristic() const;
+  float getTotalCost() const;
+  float getCost() const;
   Node* getFather() const;
 
   int operator< (const Node& node) const;
@@ -51,9 +52,10 @@ protected:
 
 private:
   Node* father_;     //!< Father of the current node.
-  std::string id_;   //!< Node numeric identifier.
-  int heuristic_;    //!< Node heuristic. h(n).
-  int totalCost_;    //!< Estimated total cost of the cheapest solution that goes
+  int id_;   //!< Node numeric identifier.
+  float heuristic_;  //!< Node heuristic. h(n).
+  float cost_;       //!< Node acumulated cost g(n).
+  float totalCost_;  //!< Estimated total cost of the cheapest solution that goes
                      //!< through this node. f(n) = g(n) + h(n).
 };
 
