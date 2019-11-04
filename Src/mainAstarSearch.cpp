@@ -27,6 +27,7 @@
      std::string heuristicsFile = argv[2];
      std::string origin = argv[3];
      std::string destination = argv[4];
+     std::string outputfile = argv[5];
      int auxOrigin = stoi(origin);
      int auxDestination = stoi (destination);
 
@@ -45,6 +46,7 @@
      }
      std::cout << NEWLINE;
      aStar.AstarSearch();
+     aStar.printResult(outputfile);
    }
    return 0;
  }

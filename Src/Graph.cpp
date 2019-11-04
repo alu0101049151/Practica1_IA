@@ -27,7 +27,14 @@ Graph::Graph(std::string& distancesFile, std::string& heuristicsFile, int origin
     fillHeuristics (heuristicsFile);
   }
 
-Graph::~Graph() {}
+Graph::~Graph() {
+  /*for (auto i: generatedNodes_) {
+    delete i;
+  }
+  for (auto j: inspectedNodes_) {
+    delete j;
+  }*/
+}
 
 std::vector<std::vector<float> > Graph::getAdjacencyMatrix() const {
   return adjacencyMatrix_;
@@ -71,6 +78,7 @@ void Graph::fillMatrix(std::string& inputFile) {
       }
     }
   }
+  distancesFile.close();
 }
 
 /**
@@ -103,39 +111,41 @@ void Graph::fillHeuristics(std::string& inputFile) {
       }
     }
   }
+  heuristicsFile.close();
 }
-
 
 /**
 * Method to carry out the A* search.
 */
 void Graph::AstarSearch() {
-  Node currentNode(origin_, 0.0, heuristics_[origin_]);  // start node
-  generatedNodes_.push_back(currentNode);
+  float minimum = 0.0;
+  bool found = false;
+  Node* currentNode = new Node(origin_, 0.0, heuristics_[origin_]);  // start node
+  //generatedNodes_.push_back(currentNode);  // Isn't necessary insert ir into generatedNodes_.
   totalGeneratedNodes_++;
   inspectedNodes_.push_back(currentNode);
 
-  while (currentNode.getId() != destination_) {
+  while (currentNode->getId() != destination_) {
    // If it isn't the destination node, generate its children nodes.
       bool condition1;
       bool condition2;
-      int auxInt = currentNode.getId();
+      int auxInt = currentNode->getId();
 
       for (int j = 0; j < adjacencyMatrix_.size(); ++j) {
         condition1 = adjacencyMatrix_[auxInt][j] != -1;
         condition2 = adjacencyMatrix_[auxInt][j] != 0;
 
         if (condition1 && condition2) {
-          float auxCost = currentNode.getCost() + adjacencyMatrix_[auxInt][j];
-          Node auxNode(j, auxCost, heuristics_[j], &currentNode);
+          float auxCost = currentNode->getCost() + adjacencyMatrix_[auxInt][j];
+          Node* auxNode = new Node(j, auxCost, heuristics_[j], currentNode);
           //Comprobar que el nodo no se encuentra en la rama o no ha sido generado.
-          if (!checkBranch(auxNode, auxNode.getFather())) {
+          if (!checkBranch(auxNode->getId(), auxNode->getFather())) {
             bool allowed = true;
             for (int i = 0; i < generatedNodes_.size(); ++i) {
-              if (auxNode.getId() == generatedNodes_[i].getId()) {
+              if (auxNode->getId() == generatedNodes_[i]->getId()) {
                 allowed = false;
-                 if (auxNode.getTotalCost() < generatedNodes_[i].getTotalCost())
-                    generatedNodes_[i] = auxNode;
+                 if (auxNode->getTotalCost() < generatedNodes_[i]->getTotalCost())
+                    generatedNodes_[i] = auxNode;   /// COMPROBAR!!!!!!!!!!!!!!!!
               }
             }
             if (allowed) {
@@ -145,14 +155,28 @@ void Graph::AstarSearch() {
           }
         }
       }
-      std::sort (generatedNodes_.begin(), generatedNodes_.end());
-      currentNode = generatedNodes_[0];
+      std::vector<Node*>::iterator ot = generatedNodes_.begin();
+      minimum = (*ot)->getTotalCost();
+      for (auto i: generatedNodes_) {
+        if (i->getTotalCost() < minimum)
+          minimum = i->getTotalCost();
+      }
+      found = false;
+      std::vector<Node*>::iterator it = generatedNodes_.begin();
+      while(!found && (it != generatedNodes_.end())){
+        if ((*it)->getTotalCost() == minimum) {
+          currentNode = (*it);
+          generatedNodes_.erase(it);
+          found = true;
+        }
+        it++;
+      }
       inspectedNodes_.push_back(currentNode);
-      generatedNodes_.erase(generatedNodes_.begin());
   }
 
-  if (currentNode.getId() == destination_) { // If it's the destination.
-    pathBackTrace(&currentNode);
+  if (currentNode->getId() == destination_) { // If it's the destination.
+    pathBackTrace(currentNode);
+    finalDistance_ = currentNode->getTotalCost();
   }
 }
 
@@ -160,14 +184,18 @@ void Graph::AstarSearch() {
 * Checks if the node to generate is in the branch.
 * Returns true if the node is in the branch.
 */
-bool Graph::checkBranch(Node newNode, Node* father) {
+bool Graph::checkBranch(int id, Node* father) {
+//  bool allowed = false;
   if (father != nullptr) {
-    if (newNode.getId() == father->getId())
+    if (id == father->getId())
        return true;
-    else
-       checkBranch(newNode, father->getFather());
-  }
-  return false;
+    else {
+       return checkBranch(id, father->getFather());
+     }
+   }
+   else
+    return false;
+  //return allowed;
 }
 
 
@@ -180,4 +208,28 @@ void Graph::pathBackTrace(Node* currentNode) {
     path_.push_back(currentNode->getId());
     pathBackTrace(currentNode->getFather());
   }
+}
+
+
+/**
+* Prints result.
+*/
+void Graph::printResult(std::string& outputfile) {
+  std::ofstream ofs;
+  ofs.open(outputfile);
+
+  ofs << "Path: " << NEWLINE;
+  for (int i = path_.size()-1; i >= 0; --i) {
+    ofs << path_[i] + 1 << " ";
+  }
+  ofs << NEWLINE;
+  ofs << "Distance: " << NEWLINE;
+  ofs << finalDistance_ << NEWLINE;
+  ofs << "Generates nodes: " << NEWLINE;
+  ofs << totalGeneratedNodes_ << NEWLINE;
+  ofs << "Inspected nodes: " << NEWLINE;
+  ofs << inspectedNodes_.size() << NEWLINE;
+
+  ofs.close();
+
 }

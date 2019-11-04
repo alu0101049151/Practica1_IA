@@ -1,0 +1,8 @@
+Path:
+0 15 5 1
+Distance:
+450
+Generates nodes:
+7
+Inspected nodes:
+6

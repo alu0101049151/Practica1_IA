@@ -50,7 +50,11 @@ public:
   * @brief Method to carry out the A* search.
   */
   void AstarSearch();
-  //Imprimir tabla de resultados al fichero.
+
+  /**
+  * @brief prints result.
+  */
+  void printResult(std::string& outputfile);
 
 protected:
   /**
@@ -72,7 +76,7 @@ protected:
   * @param father it the node to compare.
   * @return true if the node is in the branch.
   */
-  bool checkBranch(Node newNode, Node* father);
+  bool checkBranch(int id, Node* father);
 
   /**
   * @brief Enter in the path_ vector the backtrace of the path followed from the origin
@@ -84,13 +88,14 @@ private:
   std::vector<std::vector<float> > adjacencyMatrix_;  //!< Is the matrix of distances between nodes.
   std::vector<float> heuristics_;      //!< Contains the heuristics of this Graph nodes.
   std::vector<int> path_;      //!< Contains the ids of the nodes of the final path.
-  std::vector<Node>  generatedNodes_;  //!< Contains the generated nodes in the graph.
-  std::vector<Node>  inspectedNodes_;  //!< Contains the inspected nodes of all those that have been
+  std::vector<Node*>  generatedNodes_;  //!< Contains the generated nodes in the graph.
+  std::vector<Node*>  inspectedNodes_;  //!< Contains the inspected nodes of all those that have been
                                        //!< generated.
 
   int origin_;             //!< Is the id of the start node.
   int destination_;        //!< Is the id of the node we want to reach from the origin node.
   int totalGeneratedNodes_; //!< Is the total amount of generated nodes.
+  int finalDistance_;
 };
 
 #endif //PRACTICE6_GRAPH_H

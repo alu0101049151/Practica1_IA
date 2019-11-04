@@ -46,10 +46,6 @@ public:
 
   int operator< (const Node& node) const;
 
-//TODO:
-// - Setters
-protected:
-
 private:
   Node* father_;     //!< Father of the current node.
   int id_;   //!< Node numeric identifier.
